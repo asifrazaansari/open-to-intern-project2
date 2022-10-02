@@ -1,6 +1,7 @@
 const internModel = require('../models/internModel')
 const collegeModel = require('../models/collegeModel')
 const { stringChecking, isvalidEmail, isvalidMobile } = require("../validators/validator")
+const { isObjectIdOrHexString } = require('mongoose')
 
 
 const createIntern = async function (req, res) {
@@ -44,6 +45,7 @@ const createIntern = async function (req, res) {
 
 const getIntern = async function (req, res) {
     try {
+        /*
         const filter = req.query
         if(filter.collegeName && Object.keys(filter).length === 1){
             const checkCollege = await collegeModel.findOne({ name: filter.collegeName })
@@ -57,8 +59,31 @@ const getIntern = async function (req, res) {
             
             const data = { name, fullName, logoLink, interns }
             return res.status(200).send({ status: true, count: interns.length, data: data })
+             return res.status(400).send({status: false, message: "Please provide only collegeName filter"})
         }
-        return res.status(400).send({status: false, message: "Please provide only collegeName filter"})
+        */
+       const collegeName = req.query.collegeName
+       const intersList = await collegeModel.aggregate([
+        {
+            $match:{
+                name: collegeName
+            }
+        },
+        {
+            $lookup:{
+                from: "interns",
+                localField: "_id",
+                foreignField: "collegeId",
+                as: "interns"
+            }
+        },{
+            $project:{
+                name: 1,
+                interns: 1
+            }
+        }
+       ])
+       return res.status(200).send({ status: true, data: intersList })
        
     } catch (error) {
         return res.status(500).send({ status: false, message: error.message })
