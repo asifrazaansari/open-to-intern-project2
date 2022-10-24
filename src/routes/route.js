@@ -9,4 +9,8 @@ router.post('/functionup/interns', internController.createIntern)
 
 router.get('/functionup/collegeDetails', internController.getIntern)
 
+router.all('/*', async function (req, res) {
+    return res.status(400).send({ status: false, message: "Page not found" })
+})
+
 module.exports = router

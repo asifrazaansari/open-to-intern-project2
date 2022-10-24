@@ -6,7 +6,10 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect("mongodb+srv://Junaid619-DB:oS4jO8pwUnVaE0Fu@cluster0.4ufpuyj.mongodb.net/group65Database", {
+const port = process.env.PORT
+const url = process.env.MONGODB_URL
+
+mongoose.connect(url, {
     useNewUrlParser: true
 })
     .then(() => console.log("MongoDb is connected"))
@@ -14,10 +17,7 @@ mongoose.connect("mongodb+srv://Junaid619-DB:oS4jO8pwUnVaE0Fu@cluster0.4ufpuyj.m
 
 app.use('/', route)
 
-app.use(function (req, res){
-    return res.status(400).send({status: false, message: "Path not found"})
-})
 
-app.listen(process.env.PORT || 3000, function () {
-    console.log('Express app running on port ' + (process.env.PORT || 3000))
+app.listen(port, function () {
+    console.log('Express app running on port ' + (port))
 })
