@@ -1,7 +1,7 @@
 const internModel = require('../models/internModel')
 const collegeModel = require('../models/collegeModel')
 const { stringChecking, isvalidEmail, isvalidMobile } = require("../validators/validator")
-const { isObjectIdOrHexString } = require('mongoose')
+
 
 
 const createIntern = async function (req, res) {
